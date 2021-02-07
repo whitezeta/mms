@@ -1,5 +1,6 @@
 #include "Stats.h"
 #include <limits>
+#include <QMessageBox>
 
 namespace mms{
 
@@ -77,16 +78,16 @@ void Stats::bindText(StatsEnum stat, QLineEdit* uiText) {
 }
 
 void Stats::updateScore() {
-    // if solved, score = best_run_turns + best_run_effective_distance + 0.1*(total_turns + total_effective_distance)
+    // if solved, score = 0.2*(current_run_turns + current_run_effective_distance) + 0.8*(total_turns + total_effective_distance)
     float score;
-    if (solved) {
-        score = statValues[StatsEnum::BEST_RUN_EFFECTIVE_DISTANCE] + statValues[StatsEnum::BEST_RUN_TURNS]
-                + 0.1* (statValues[StatsEnum::TOTAL_EFFECTIVE_DISTANCE] + statValues[StatsEnum::TOTAL_TURNS]);
-    }
-    else {
-        score = 2000; // default score
-    }
+    score = 0.2* (statValues[StatsEnum::CURRENT_RUN_EFFECTIVE_DISTANCE] + statValues[StatsEnum::CURRENT_RUN_TURNS])
+                + 0.8* (statValues[StatsEnum::TOTAL_EFFECTIVE_DISTANCE] + statValues[StatsEnum::TOTAL_TURNS]);
     textField[StatsEnum::SCORE]->setText(QString::number(score));
+    if (solved) {
+        QMessageBox msgBox;
+        msgBox.setText("   Solved!\nScore - " + QString::number(score));
+        msgBox.exec();
+    }
 }
 
 float Stats::getEffectiveDistance(int distance) {
