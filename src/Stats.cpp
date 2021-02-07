@@ -4,7 +4,7 @@
 
 namespace mms{
 
-Stats::Stats(): startedRun(false), solved(false), penalty(0.0) {
+Stats::Stats(): startedRun(false), solved(false), printedscore(false), penalty(0.0) {
 }
 
 void Stats::reset(StatsEnum stat) {
@@ -15,6 +15,7 @@ void Stats::reset(StatsEnum stat) {
 void Stats::resetAll() {
     startedRun = false;
     solved = false;
+    printedscore = false;
     QMapIterator<StatsEnum, QLineEdit*> i(textField);
     while (i.hasNext()) {
         i.next();
@@ -83,10 +84,11 @@ void Stats::updateScore() {
     score = 0.2* (statValues[StatsEnum::CURRENT_RUN_EFFECTIVE_DISTANCE] + statValues[StatsEnum::CURRENT_RUN_TURNS])
                 + 0.8* (statValues[StatsEnum::TOTAL_EFFECTIVE_DISTANCE] + statValues[StatsEnum::TOTAL_TURNS]);
     textField[StatsEnum::SCORE]->setText(QString::number(score));
-    if (solved) {
+    if (solved && !(printedscore)) {
         QMessageBox msgBox;
         msgBox.setText("   Solved!\nScore - " + QString::number(score));
         msgBox.exec();
+        printedscore = true;
     }
 }
 

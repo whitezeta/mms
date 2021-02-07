@@ -37,6 +37,7 @@ private:
     QMap<StatsEnum, QLineEdit*> textField;
     bool startedRun;
     bool solved;
+    bool printedscore;
     float penalty;
     void updateScore();
     void increment(StatsEnum stat, float increase);
